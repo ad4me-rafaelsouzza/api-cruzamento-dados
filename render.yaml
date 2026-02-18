@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: api-cruzamento-dados
+    runtime: python311
+    buildCommand: pip install -r requirements.txt
+    startCommand: python api.py
+    envVars:
+      - key: PORT
+        value: 8000
+      - key: PYTHONUNBUFFERED
+        value: true
