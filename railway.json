@@ -1,0 +1,7 @@
+{
+  "name": "API Cruzamento de Dados",
+  "description": "API que cruza dados de múltiplos bancos SQLite",
+  "keywords": ["api", "fastapi", "sqlite", "python"],
+  "buildCommand": "pip install -r requirements.txt",
+  "startCommand": "python api.py"
+}

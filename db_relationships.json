@@ -1,0 +1,95 @@
+{
+  "databases": {
+    "DB1_PODER_AQUISITIVO": {
+      "file": "SRS_TB_PODER_AQUISITIVO.db",
+      "table": "SRS_TB_PODER_AQUISITIVO",
+      "primary_key": "CONTATOS_ID",
+      "columns": [
+        "CONTATOS_ID",
+        "COD_PODER_AQUISITIVO",
+        "PODER_AQUISITIVO",
+        "RENDA_PODER_AQUISITIVO",
+        "FX_PODER_AQUISITIVO"
+      ]
+    },
+    "DB2_HISTORICO_TELEFONES": {
+      "file": "SRS_HISTORICO_TELEFONES.db",
+      "table": "SRS_HISTORICO_TELEFONES",
+      "primary_key": "CONTATOS_ID",
+      "columns": [
+        "CONTATOS_ID",
+        "DDD",
+        "TELEFONE",
+        "TIPO_TELEFONE",
+        "DT_INCLUSAO",
+        "DT_INFORMACAO",
+        "SIGILO",
+        "NSU",
+        "CLASSIFICACAO"
+      ]
+    },
+    "DB3_CONTATOS": {
+      "file": "SRS_CONTATOS.db",
+      "table": "SRS_CONTATOS",
+      "primary_key": "CONTATOS_ID",
+      "columns": [
+        "CONTATOS_ID",
+        "CPF",
+        "NOME",
+        "SEXO",
+        "NASC",
+        "NOME_MAE",
+        "NOME_PAI",
+        "CADASTRO_ID",
+        "ESTCIV",
+        "RG"
+      ]
+    },
+    "DB4_IRPF": {
+      "file": "SRS_TB_IRPF.db",
+      "table": "SRS_TB_IRPF",
+      "primary_key": "DocNumber",
+      "columns": [
+        "DocNumber",
+        "Instituicao_Bancaria",
+        "Cod_Agencia",
+        "Lote",
+        "Ano_Referencia",
+        "Dt_Lote",
+        "Sit_Receita_Federal",
+        "Dt_Consulta"
+      ]
+    }
+  },
+  "relationships": {
+    "CONTATOS_ID": {
+      "type": "common_key",
+      "databases": ["DB1_PODER_AQUISITIVO", "DB2_HISTORICO_TELEFONES", "DB3_CONTATOS"],
+      "description": "Chave primária que conecta dados de poder aquisitivo, histórico de telefones e informações de contatos"
+    },
+    "CPF_DocNumber": {
+      "type": "potential_match",
+      "databases": ["DB3_CONTATOS", "DB4_IRPF"],
+      "fields": {
+        "DB3_CONTATOS": "CPF",
+        "DB4_IRPF": "DocNumber"
+      },
+      "description": "Possível relação entre CPF em contatos e DocNumber em IRPF (ambos podem ser CPF)"
+    }
+  },
+  "query_strategies": {
+    "by_contatos_id": {
+      "description": "Busca completa por CONTATOS_ID retornando dados de 3 bancos",
+      "databases": ["DB1_PODER_AQUISITIVO", "DB2_HISTORICO_TELEFONES", "DB3_CONTATOS"]
+    },
+    "by_cpf": {
+      "description": "Busca por CPF retornando dados de contatos e IRPF",
+      "databases": ["DB3_CONTATOS", "DB4_IRPF"],
+      "note": "Requer normalização de CPF (remover pontos e traços)"
+    },
+    "full_profile": {
+      "description": "Perfil completo: busca por CONTATOS_ID ou CPF e retorna todos os dados disponíveis",
+      "databases": ["DB1_PODER_AQUISITIVO", "DB2_HISTORICO_TELEFONES", "DB3_CONTATOS", "DB4_IRPF"]
+    }
+  }
+}
